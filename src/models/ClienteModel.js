@@ -34,10 +34,8 @@ const getAll = async () => {
 
 const findUserByEmail = async (email) => {
   const query = "SELECT * FROM cliente WHERE email = ?";
-
   const [rows] = await connection.execute(query, [email]);
-
-  return rows.length > 0 ? true : false; // Retorna o true se usuário encontrado ou false
+  return rows.length > 0 ? rows[0] : null; // Retorna o usuário completo ou null
 };
 
 

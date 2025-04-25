@@ -1,14 +1,22 @@
 const clienteModel = require("../models/ClienteModel");
 const planoModel = require("../models/PlanoModel");
+const bcrypt = require('bcryptjs');
 
 const createUser = async (request, response) => {
   try {
-    let { idPlano, pagamento, email } = request.body;
-    
-    if(pagamento == ''){
-        pagamento = "Grátis";
+    let { idPlano, pagamento, email, senha, primeiroNome, sobrenome } = request.body;
+
+    if (!primeiroNome || !sobrenome) {
+      return response.status(400).json({ error: "Nome e sobrenome são obrigatórios." });
     }
-    
+
+    if (!email || !senha) {
+      return response.status(400).json({ error: "Email e senha são obrigatórios." });
+    }
+
+    if (pagamento === '') {
+      pagamento = "Grátis";
+    }
 
     // Verifica se o e-mail já está cadastrado
     const checkEmailDuplicado = await clienteModel.findUserByEmail(email);
@@ -24,8 +32,17 @@ const createUser = async (request, response) => {
       return response.status(404).json({ message: "Plano inexistente" });
     }
 
+    // Criptografar a senha antes de salvar
+    const senhaCriptografada = await bcrypt.hash(senha, 10);
+
     // Cria o usuário
-    const id_cliente = await clienteModel.createUser(request.body);
+    const id_cliente = await clienteModel.createUser({
+      primeiroNome,
+      sobrenome,
+      email,
+      senha: senhaCriptografada,
+    });
+
     if (!id_cliente) {
       return response
         .status(501)
@@ -83,26 +100,34 @@ const updateUser = async (request, response) => {
 };
 
 const loginUser = async (request, response) => {
-  const { email, password } = request.body;
+  try {
+    const { email, password } = request.body;
 
-  if (!email || !password) {
-    return response
-      .status(400)
-      .json({ error: "Email e senha são obrigatórios" });
+    if (!email || !password) {
+      return response
+        .status(400)
+        .json({ error: "Email e senha são obrigatórios." });
+    }
+
+    // Busca o usuário pelo email
+    const user = await clienteModel.findUserByEmail(email);
+
+    if (!user) {
+      return response.status(404).json({ error: "Email não encontrado." });
+    }
+
+    // Compara a senha fornecida com a senha armazenada no banco de dados
+    const senhaValida = await bcrypt.compare(password, user.senha);
+    if (!senhaValida) {
+      return response.status(401).json({ error: "Senha incorreta." });
+    }
+
+    // Retorna sucesso no login
+    return response.status(200).json({ message: "Login realizado com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao processar login:", error);
+    return response.status(500).json({ error: "Erro interno do servidor." });
   }
-
-  const user = await clienteModel.findUserByEmail(email);
-
-  if (!user) {
-    return response.status(404).json({ error: "Emailnão encontrado" });
-  }
-
-  if (user.senha !== password) {
-    // Sem criptografia, compara diretamente
-    return response.status(401).json({ error: "Senha incorreta" });
-  }
-
-  return response.status(200).json({ message: "Login realizado com sucesso!" });
 };
 
 module.exports = {

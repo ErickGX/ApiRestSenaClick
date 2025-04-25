@@ -110,7 +110,8 @@ const getPlanos = async (request, response) => {
     if (listaPlanos.length == 0) {
       return response.status(200).json([]);
     }
-    console.log("Lista de planos apra o crud concluida com sucesso:", listaPlanos);
+
+ // console.log("Lista de planos apra o crud concluida com sucesso:", listaPlanos);
     
     return response.status(200).json(listaPlanos);
   } catch (error) {
