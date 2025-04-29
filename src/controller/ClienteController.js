@@ -6,23 +6,11 @@ const createUser = async (request, response) => {
   try {
     let { idPlano, pagamento, email, senha, primeiroNome, sobrenome } = request.body;
 
-    if (!primeiroNome || !sobrenome) {
-      return response.status(400).json({ error: "Nome e sobrenome são obrigatórios." });
-    }
-
-    if (!email || !senha) {
-      return response.status(400).json({ error: "Email e senha são obrigatórios." });
-    }
-
-    if (pagamento === '') {
-      pagamento = "Grátis";
-    }
-
-    // Verifica se o e-mail já está cadastrado
+       // Verifica se o e-mail já está cadastrado
     const checkEmailDuplicado = await clienteModel.findUserByEmail(email);
     if (checkEmailDuplicado) {
       return response
-        .status(400)
+        .status(409) //codigo para conflito de dados
         .json({ error: "Usuário já cadastrado com esse e-mail." });
     }
 
@@ -45,8 +33,8 @@ const createUser = async (request, response) => {
 
     if (!id_cliente) {
       return response
-        .status(501)
-        .json({ message: "Erro ao cadastrar o usuário." });
+        .status(500)
+        .json({ message: "Erro interno ao cadastrar o usuário." });
     }
 
     // Associa o usuário ao plano

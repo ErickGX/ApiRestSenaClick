@@ -5,6 +5,9 @@ const clienteController = require('./controller/ClienteController');
 const planoController = require('./controller/PlanoController');
 const adminController = require('./controller/AdminController');
 
+//Middleware para validar os dados do cliente
+const validateClientData = require('./middlewares/ValidateClientData');
+
 router.get("/hello"); // rota para teste
 
 router.get("/" , (request, response)=>{
@@ -19,7 +22,7 @@ router.post("/admin/login", adminController.loginAdm);//login adm
 
 //cadastro do admin vai ser apenas via DBA / Banco de dados
 //Unica utilizavel pelo usuario
-router.post("/cliente",clienteController.createUser); //criar um cliente
+router.post("/cliente", validateClientData, clienteController.createUser); //criar um cliente
 
 
 
