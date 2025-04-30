@@ -17,7 +17,7 @@ const createUser = async (request, response) => {
     // Verifica se o plano existe
     const checkPlanoExists = await planoModel.checkPlanoExists(idPlano);
     if (!checkPlanoExists) {
-      return response.status(404).json({ message: "Plano inexistente" });
+      return response.status(404).json({ error: "Plano inexistente" });
     }
 
     // Criptografar a senha antes de salvar
@@ -34,7 +34,7 @@ const createUser = async (request, response) => {
     if (!id_cliente) {
       return response
         .status(500)
-        .json({ message: "Erro interno ao cadastrar o usuário." });
+        .json({ error: "Erro interno ao cadastrar o usuário." });
     }
 
     // Associa o usuário ao plano
@@ -54,9 +54,15 @@ const createUser = async (request, response) => {
 };
 
 const getAll = async (request, response) => {
-  const listaClientes = await clienteModel.getAll();
+  try {
+    const listaClientes = await clienteModel.getAll();
+    return response.status(200).json(listaClientes);   
+  } catch (error) {
+    console.log("Erro ao consultar clientes no banco de dados", error);
+    return response.status(500).json({ message: "Erro interno do servidor" });
+  }
 
-  return response.status(200).json(listaClientes);
+ 
 };
 
 
@@ -83,7 +89,7 @@ const updateUser = async (request, response) => {
       return response.status(204).send();
   } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
-      return response.status(500).json({ message: "Erro interno do servidor" });
+      return response.status(500).json({ message: "Erro interno do servidor, ao atualizar usuario" });
   }
 };
 

@@ -1,8 +1,6 @@
 const connection = require("./Connection");
 
 
-
-
 const checkPlanoExists = async (id_plano) => {
   
   const [result] = await connection.execute(
@@ -13,7 +11,6 @@ const checkPlanoExists = async (id_plano) => {
 
   return result.length > 0;
 }
-
 
   const associateUserToPlan = async (id_cliente, id_plano, pagamento) => {
 
@@ -32,24 +29,9 @@ const checkPlanoExists = async (id_plano) => {
 };
 
 
-
-// const createSubscription = async (subscription) => {
-  
-//   const { tipo, preco } = subscription;
-
-//   const query = "INSERT INTO plano(tipo, preco) VALUES(?,?)";
-
-//   const [createdSubscription] = await connection.execute(query, [tipo, preco]);
-
-//   return createdSubscription;
-// };
-
 const createSubscription = async (subscription) => {
   const { titulo, preco, artigo, noticia, edicao, textoBotao, classe } =
     subscription;
-
-
-    
 
   const query = `
     INSERT INTO plano (titulo, preco, artigo, noticia, edicao, textoBotao, classe) 
@@ -130,8 +112,6 @@ const updateSubscription = async (id, subscription) => {
 
   return updatedSubscription;
 };
-
-
 
 const getAllSignatures = async () => {
 

@@ -1,5 +1,4 @@
 // Sanitização e validação de dados do cliente
-
 const validateClientData = (request, response, next) => {
   const { idPlano, tipoPlano, primeiroNome, sobrenome, email, senha, pagamento } = request.body;
 
