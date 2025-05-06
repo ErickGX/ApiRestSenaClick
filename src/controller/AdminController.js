@@ -1,34 +1,20 @@
 const adminModel = require("../models/AdminModel");
-
+const bcrypt = require("bcryptjs");
 
 const loginAdm = async (request, response) => {
-  console.log("Requisicao Front :" + request.body);
-  
   const { email, password } = request.body;
 
-  console.log("Controller : " + email + "  Senha : " +password);
-  
-
-  if (!email || !password) {
-    return response
-      .status(400)
-      .json({ error: "Email e senha são obrigatórios" });
-  }
-
   try {
+    // Busca o administrador pelo email
     const administrador = await adminModel.findAdminByEmail(email);
-
 
     if (!administrador) {
       return response.status(404).json({ error: "Email não encontrado" });
     }
 
-    console.log(administrador.senha  + "Senha ADM BD");
-    console.log("Senha front end Angular: "  + password);
-    
-    
-
-    if (administrador.senha !== password) {
+    // Verifica se a senha está correta usando bcrypt
+    const senhaValida = await bcrypt.compare(password, administrador.senha);
+    if (!senhaValida) {
       return response.status(401).json({ error: "Senha incorreta" });
     }
 
@@ -41,6 +27,39 @@ const loginAdm = async (request, response) => {
   }
 };
 
+const createAdmin = async (request, response) => {
+  try {
+    const { nome, sobrenome, email, password } = request.body;
+
+    // Verifica se o email já está cadastrado
+    const existingAdmin = await adminModel.findAdminByEmail(email);
+    if (existingAdmin) {
+      return response.status(409).json({ message: "Email já cadastrado." });
+    }
+
+    // Criptografa a senha antes de salvar
+    const senhaCriptografada = await bcrypt.hash(password, 10);
+
+    // Cria o administrador
+    const adminId = await adminModel.createAdmin({
+      nome,
+      sobrenome,
+      email,
+      password: senhaCriptografada,
+    });
+
+    return response
+      .status(201)
+      .json({ message: "Administrador criado com sucesso!", id: adminId });
+  } catch (error) {
+    console.error("Erro ao criar administrador:", error);
+    return response.status(500).json({ message: "Erro interno do servidor." });
+  }
+};
+
+
+
 module.exports = {
   loginAdm,
+  createAdmin,
 };

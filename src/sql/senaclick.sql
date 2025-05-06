@@ -16,7 +16,7 @@ CREATE TABLE plano (
 CREATE TABLE cliente (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(250) NOT NULL,
-    sobrenome VARCHAR(250) NULL,
+    sobrenome VARCHAR(250) NOT NULL,
     email VARCHAR(250) NOT NULL UNIQUE,
     senha VARCHAR(100) NOT NULL
 );
@@ -57,10 +57,4 @@ INSERT INTO plano (titulo, preco, artigo, noticia, edicao, textoBotao, classe) V
 --             INNER JOIN cliente ON cliente_plano.id_cliente = cliente.id
 --             INNER JOIN plano ON cliente_plano.id_plano = plano.id;
 
-
-
-INSERT INTO administrador (nome, sobrenome, email, senha)
-VALUES 
-  ('João', 'Silva', 'joao@email.com', 'senha123'),
-  ('Maria', 'Oliveira', 'maria@email.com', 'senha456'),
-  ('Carlos', 'Santos', 'carlos@email.com', 'senha789');
+-- inserção de admin apenas via postman agora

@@ -1,9 +1,9 @@
-// Sanitização e validação de dados do cliente
 const validateClientData = (request, response, next) => {
+  // Extrai apenas os campos esperados do request.body
   const { idPlano, tipoPlano, primeiroNome, sobrenome, email, senha, pagamento } = request.body;
 
   // Verifica se os campos obrigatórios estão presentes
-  if (!idPlano || !tipoPlano || !primeiroNome || !sobrenome || !email || !senha || !pagamento) {
+  if (!idPlano || !tipoPlano || !primeiroNome || !sobrenome || !email || !senha) {
     return response.status(400).json({ message: "Todos os campos são obrigatórios." });
   }
 
@@ -37,9 +37,6 @@ const validateClientData = (request, response, next) => {
   }
 
   // Verifica se o método de pagamento é válido
-  // Futura troca de valor enviada pelo Front-end
-  
-  //const metodosPagamentoValidos = ["Boleto Bancário", "Cartão de Crédito", "Pix", ""];
   const metodosPagamentoValidos = ["boleto", "cartao", "pix", ""];
   if (!metodosPagamentoValidos.includes(pagamento.toLowerCase())) {
     return response.status(400).json({ message: "Método de pagamento inválido." });

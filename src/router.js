@@ -7,8 +7,9 @@ const adminController = require('./controller/AdminController');
 
 //Middleware para validar os dados do cliente
 const validateClientData = require('./middlewares/ValidateClientData');
+//Middleware para validar os dados do administrador
+const adminMiddleware = require('./middlewares/AdminMiddleware');
 
-router.get("/hello"); // rota para teste
 
 router.get("/" , (request, response)=>{
     response.send("Rota funcionando");
@@ -16,11 +17,12 @@ router.get("/" , (request, response)=>{
 
 
 router.get("/cliente/login", clienteController.loginUser); //logar um cliente 
-router.post("/admin/login", adminController.loginAdm);//login adm
+router.post("/admin/login", adminMiddleware.validateAdminLogin, adminController.loginAdm);//login adm
 
 
 
-//cadastro do admin vai ser apenas via DBA / Banco de dados
+//cadastro do admin vai ser apenas via PostMan
+router.post("/admin",adminMiddleware.validateAdminData, adminController.createAdmin); //criar um admin
 //Unica utilizavel pelo usuario
 router.post("/cliente", validateClientData, clienteController.createUser); //criar um cliente
 
