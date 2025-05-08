@@ -117,10 +117,11 @@ const getAllSignatures = async () => {
 
           //uso de crases para quebra de linha
           const query = `
-            SELECT cliente.id, cliente.nome, plano.titulo, pagamento, plano.preco, data_assinatura
+            SELECT id_cliente_plano, cliente.nome, plano.titulo, pagamento, plano.preco, data_assinatura
             FROM cliente_plano
             INNER JOIN cliente ON cliente_plano.id_cliente = cliente.id
-            INNER JOIN plano ON cliente_plano.id_plano = plano.id `;
+            INNER JOIN plano ON cliente_plano.id_plano = plano.id 
+            ORDER BY id_cliente_plano ASC`;
    
   const [signatures] = await connection.execute(query);
 

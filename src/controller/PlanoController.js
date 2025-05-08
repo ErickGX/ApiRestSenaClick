@@ -1,27 +1,6 @@
 const planoModel = require("../models/PlanoModel");
 const { format, toZonedTime } = require("date-fns-tz");
 
-// const createSubscription = async (request, response) => {
-//   try {
-
-//      const { tipo, preco } = request.body;
-
-//      if (!tipo || !preco) {
-//        return response
-//          .status(400)
-//          .json({ error: "Campos 'tipo' e 'preco' são obrigatórios" });
-//      }
-
-//     const createdSubscription = await planoModel.createSubscription(request.body);
-
-//     return response.status(201).json({ id: createdSubscription.insertId });
-
-//   } catch (error) {
-//       console.error("Erro ao criar assinatura:", error.message);
-//       return response.status(500).json({ error: "Erro interno do servidor" });
-//   }
-// };
-
 
 
 //cria um plano
