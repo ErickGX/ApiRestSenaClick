@@ -9,6 +9,7 @@ const adminController = require('./controller/AdminController');
 const validateClientData = require('./middlewares/ValidateClientData');
 //Middleware para validar os dados do administrador
 const adminMiddleware = require('./middlewares/AdminMiddleware');
+const authMiddleware = require('./middlewares/AuthMiddleware');
 
 
 router.get("/" , (request, response)=>{
@@ -17,15 +18,24 @@ router.get("/" , (request, response)=>{
 
 
 router.get("/cliente/login", clienteController.loginUser); //logar um cliente 
-router.post("/admin/login", adminMiddleware.validateAdminLogin, adminController.loginAdm);//login adm
-
+router.post("/admin/login", adminMiddleware.validateAdminLogin,  adminController.loginAdm);//login adm com JWT
 
 
 //cadastro do admin vai ser apenas via PostMan
-router.post("/admin",adminMiddleware.validateAdminData, adminController.createAdmin); //criar um admin
+router.post("/admin",adminMiddleware.validateAdminCreation, adminController.createAdmin); //criar um admin
 //Unica utilizavel pelo usuario
 router.post("/cliente", validateClientData, clienteController.createUser); //criar um cliente
 
+
+// Rota de teste de autenticação
+router.post('/admin/teste-token', authMiddleware, (req, res) => {
+   // console.log("Token decodificado:", req.admin); // Aqui você pode acessar os dados decodificados do token
+    
+  res.status(200).json({
+    message: 'Token válido. Acesso autorizado!',
+    admin: req.admin  // Mostra os dados decodificados do token (ex: email, id)
+  });
+});
 
 
 

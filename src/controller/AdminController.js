@@ -1,5 +1,6 @@
 const adminModel = require("../models/AdminModel");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const loginAdm = async (request, response) => {
   const { email, password } = request.body;
@@ -18,9 +19,16 @@ const loginAdm = async (request, response) => {
       return response.status(401).json({ error: "Senha incorreta" });
     }
 
-    return response
-      .status(200)
-      .json({ message: "Login realizado com sucesso!" });
+
+    // Cria um token JWT com os dados do administrador
+    const token = jwt.sign(
+      { id: administrador.id_admin ,email: administrador.email },
+      process.env.SECRET_KEY_API,
+      { expiresIn: "5m" } // O token expira em 1 minuto
+    );
+
+    return response.status(200).json({token});
+
   } catch (error) {
     console.error("Erro ao tentar fazer login:", error);
     return response.status(500).json({ error: "Erro interno do servidor" });

@@ -27,7 +27,7 @@ const validateAdminLogin = (request, response, next) => {
 
 
 // Middleware para validação dos dados de cadastro do administrador
-const validateAdminData = (request, response, next) => {
+const validateAdminCreation = (request, response, next) => {
   const { nome, sobrenome, email, password } = request.body;
 
   // Verifica se todos os campos obrigatórios estão presentes
@@ -66,5 +66,5 @@ const validateAdminData = (request, response, next) => {
 
 module.exports = {
   validateAdminLogin,
-  validateAdminData,
+  validateAdminCreation,
 };
