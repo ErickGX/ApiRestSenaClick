@@ -40,11 +40,11 @@ router.post('/admin/teste-token', authMiddleware, (req, res) => {
 
 
 // Rota para validar o token vindo do front end
-router.post("/validate-token", authMiddleware, (req, res) => {
+router.post("/admin/validate-token", authMiddleware, (req, res) => {
   res.status(200).json({
     valid: true,
     admin: req.admin,
-    message: "Token válido. Acwesso autorizado!",
+    message: "Token válido. Acesso autorizado!",
     // Retorna os dados decodificados do token (opcional)
   });
 });
