@@ -19,12 +19,11 @@ const loginAdm = async (request, response) => {
       return response.status(401).json({ error: "Senha incorreta" });
     }
 
-
     // Cria um token JWT com os dados do administrador
     const token = jwt.sign(
       { id: administrador.id_admin ,email: administrador.email },
       process.env.SECRET_KEY_API,
-      { expiresIn: "5m" } // O token expira em 1 minuto
+      { expiresIn: "30s" } // Mudar para o tempo para o desejado , ex :  30s , 1m , 5m , 1h ou etc
     );
 
     return response.status(200).json({token});
@@ -64,7 +63,6 @@ const createAdmin = async (request, response) => {
     return response.status(500).json({ message: "Erro interno do servidor." });
   }
 };
-
 
 
 module.exports = {

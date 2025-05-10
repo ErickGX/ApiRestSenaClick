@@ -27,7 +27,7 @@ router.post("/admin",adminMiddleware.validateAdminCreation, adminController.crea
 router.post("/cliente", validateClientData, clienteController.createUser); //criar um cliente
 
 
-// Rota de teste de autenticação
+// Rota de teste de autenticação para teste com postman
 router.post('/admin/teste-token', authMiddleware, (req, res) => {
    // console.log("Token decodificado:", req.admin); // Aqui você pode acessar os dados decodificados do token
     
@@ -39,6 +39,15 @@ router.post('/admin/teste-token', authMiddleware, (req, res) => {
 
 
 
+// Rota para validar o token vindo do front end
+router.post("/validate-token", authMiddleware, (req, res) => {
+  res.status(200).json({
+    valid: true,
+    admin: req.admin,
+    message: "Token válido. Acwesso autorizado!",
+    // Retorna os dados decodificados do token (opcional)
+  });
+});
 
 //conjunto de rotas cliente de manipulação exclusica do administrador
 router.get("/cliente", clienteController.getAll);//Listar todos clientes
